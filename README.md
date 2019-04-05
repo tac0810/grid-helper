@@ -155,7 +155,7 @@ var gridProperty = {
 
 ### .verticalGrid(property)
  - Arguments:
-   - { gridProperty | Number } property
+   - { gridProperty } property
    - { null } default
  - Usage:
    Draw columns with gutter, if you want.
