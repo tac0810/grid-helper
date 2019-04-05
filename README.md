@@ -68,25 +68,36 @@ var gridProperty = {
   - { borderProperty | Number } property
   - { null } default
 - Usage:  
-  Draw top border.
+  Draw top border.  
+  
+![alt text](https://github.com/tac0810/grid-helper/blob/master/examples/top.png)
+
 ### .right(property)
 - Arguments:
   - { borderProperty | Number } property
   - { null } default
 - Usage:  
   Draw right border.
+
+![alt text](https://github.com/tac0810/grid-helper/blob/master/examples/right.png)
+
 ### .bottom(property)
 - Arguments:
   - { borderProperty | Number } property
   - { null } default
 - Usage:  
   Draw bottom border.
+  
+![alt text](https://github.com/tac0810/grid-helper/blob/master/examples/bottom.png)
+  
 ### .left(property)
 - Arguments:
   - { borderProperty | Number } property
   - { null } default
 - Usage:  
   Draw left border.
+
+![alt text](https://github.com/tac0810/grid-helper/blob/master/examples/left.png)
 
 ### .verticalCenter(property)
  - Arguments:
@@ -95,12 +106,16 @@ var gridProperty = {
  - Usage:  
    Draw vertical center border.
 
+![alt text](https://github.com/tac0810/grid-helper/blob/master/examples/verticalCenter.png)
+
 ### .horizontalCenter(property)
  - Arguments:
    - { borderProperty | Number } property
    - { null } default
  - Usage:  
    Draw horizontal center border.
+ 
+![alt text](https://github.com/tac0810/grid-helper/blob/master/examples/horizontalCenter.png)
  
 ### .center(property)
  - Arguments:
@@ -109,12 +124,16 @@ var gridProperty = {
  - Usage:  
    Draw vertical and horizontal center border.
 
+![alt text](https://github.com/tac0810/grid-helper/blob/master/examples/center.png)
+
 ### .verticalEnds(property)
  - Arguments:
    - { borderProperty | Number } property
    - { null } default
  - Usage:  
    Draw right and left border.
+   
+![alt text](https://github.com/tac0810/grid-helper/blob/master/examples/verticalEnds.png)
    
 ### .horizontalEnds(property)
  - Arguments:
@@ -123,12 +142,16 @@ var gridProperty = {
  - Usage:
    Draw top and bottom border.
    
+![alt text](https://github.com/tac0810/grid-helper/blob/master/examples/horizontalEnds.png)
+   
 ### .frame(property)
  - Arguments:
    - { borderProperty | Number } property
    - { null } default
  - Usage:
    Draw verticalEnds and horizontalEnds border.
+
+![alt text](https://github.com/tac0810/grid-helper/blob/master/examples/frame.png)
 
 ### .verticalGrid(property)
  - Arguments:
@@ -137,3 +160,4 @@ var gridProperty = {
  - Usage:
    Draw columns with gutter, if you want.
 
+![alt text](https://github.com/tac0810/grid-helper/blob/master/examples/verticalGrid.png)
