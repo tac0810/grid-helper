@@ -1,12 +1,51 @@
 (function() {
-	// 'use strict';
+	'use strict';
 
 	/**
 	 *
-	 * @param props {{key: {enable: boolean, color: string, alpha: number, to: string}}}
 	 * @constructor
 	 */
-	function GridHelper(props) {
+	function GridHelper() {
+
+		/**
+		 *
+		 * @type {{color: string, alpha: number, position: number}}
+		 * @private
+		 */
+		this._defaultProp = {
+			color: '#5bf5ff',
+			alpha: 1.0,
+			position: 30,
+		}
+
+		/**
+		 *
+		 * @type {{gutter: number, color: string, left: number, alpha: number, width: number, right: number, cols: number}}
+		 * @private
+		 */
+		this._defaultGridProp = {
+			color: '#f00',
+			alpha: 0.5,
+			cols: 3,
+			gutter: 30,
+			width: 1280,
+			right: 30,
+			left: 30,
+		}
+
+		/**
+		 *
+		 * @type {RegExp}
+		 * @private
+		 */
+		this._numberReg = /^[-]?[0-9]+(\.[0-9]+)?$/
+
+		/**
+		 *
+		 * @type {RegExp}
+		 * @private
+		 */
+		this._unitReg = /^[-]?[0-9]+(\.[0-9]+)?(em|ex|in|cm|mm|pt|pc|px|ch|rem|vw|vh|vmax|vmin|q|%)$/
 
 		/**
 		 *
@@ -14,35 +53,156 @@
 		 * @private
 		 */
 		this._frame = document.createElement('div')
-		this._init(props)
+		this._setUpFrame()
+	}
+
+	// public
+
+	/**
+	 *
+	 * @param prop
+	 * @public
+	 */
+	GridHelper.prototype.top = function(prop) {
+		this._generateBorder('top', this._checkProps(prop, false))
 	}
 
 	/**
 	 *
-	 * @private
+	 * @param prop
+	 * @public
 	 */
-	GridHelper.prototype._init = function(props) {
-		this._checkProps(props)
-		this._setUpFrame()
+	GridHelper.prototype.right = function(prop) {
+		this._generateBorder('right', this._checkProps(prop, false))
 	}
 
-	GridHelper.prototype._checkProps = function(props) {
-		if (undefined === props || null === props || 'object' !== (typeof props).toLowerCase()) {
-			return
-		}
-		var propKeys = Object.keys(props)
-		for (var i = 0; i < propKeys.length; i++) {
-			var propKey = propKeys[i];
+	/**
+	 *
+	 * @param prop
+	 * @public
+	 */
+	GridHelper.prototype.bottom = function(prop) {
+		this._generateBorder('bottom', this._checkProps(prop, false))
+	}
 
-			if (/Center/.test(propKey)) {
-				this._setCenterBorders(propKey, props[propKey])
-			} else {
-				this._setBorders(propKey, props[propKey])
+	/**
+	 *
+	 * @param prop
+	 * @public
+	 */
+	GridHelper.prototype.left = function(prop) {
+		this._generateBorder('left', this._checkProps(prop, false))
+	}
+
+	/**
+	 *
+	 * @param prop
+	 * @public
+	 */
+	GridHelper.prototype.verticalCenter = function(prop) {
+		this._generateBorder('left', this._checkProps(prop, true))
+	}
+
+	/**
+	 *
+	 * @param prop
+	 * @public
+	 */
+	GridHelper.prototype.horizontalCenter = function(prop) {
+		this._generateBorder('top', this._checkProps(prop, true))
+	}
+
+	/**
+	 *
+	 * @param prop
+	 * @public
+	 */
+	GridHelper.prototype.center = function(prop) {
+		this.verticalCenter(prop)
+		this.horizontalCenter(prop)
+	}
+
+	/**
+	 *
+	 * @param prop
+	 * @public
+	 */
+	GridHelper.prototype.verticalEnds = function(prop) {
+		this.left(prop)
+		this.right(prop)
+	}
+
+	/**
+	 *
+	 * @param prop
+	 * @public
+	 */
+	GridHelper.prototype.horizontalEnds = function(prop) {
+		this.top(prop)
+		this.bottom(prop)
+	}
+
+	/**
+	 *
+	 * @param prop
+	 * @public
+	 */
+	GridHelper.prototype.frame = function(prop) {
+		this.verticalEnds(prop)
+		this.horizontalEnds(prop)
+	}
+
+	/**
+	 *
+	 * @param prop {{gutter: number, color: string, left: number, alpha: number, width: number, right: number, cols: number}}
+	 */
+	GridHelper.prototype.verticalGrid = function(prop) {
+		prop = this._checkGridProps(prop)
+
+		var grid = document.createElement('div')
+		grid.style.position = 'absolute'
+		grid.style.display = 'block'
+		grid.style.width = '100%'
+		grid.style.height = '100%'
+		grid.style.boxSizing = 'border-box'
+		grid.style.opacity = prop.alpha
+		grid.style.zIndex = '9999999'
+
+		var gridInner = document.createElement('div')
+		gridInner.style.display = 'flex'
+		gridInner.style.height = '100%'
+
+		if ('width' in prop) {
+			gridInner.style.width = this._formatPosition(prop.width)
+			gridInner.style.marginRight = 'auto'
+			gridInner.style.marginLeft = 'auto'
+		} else {
+			gridInner.style.paddingLeft = this._formatPosition(prop.left)
+			gridInner.style.paddingRight = this._formatPosition(prop.right)
+		}
+
+		for (var i = 0; i < prop.cols; i++) {
+			var col = document.createElement('div')
+			var _gutter = this._formatPosition(prop.gutter)
+
+			col.style.height = '100%'
+			col.style.flexGrow = 1
+			col.style.flexBasis = 0
+			col.style.marginRight = (prop.cols - 1 === i) ? 0 : _gutter
+			col.style.borderRight = '1px solid ' + prop.color
+
+			if (0 === i || Number(_gutter.replace(/\D/g, '')) > 0) {
+				col.style.borderLeft = '1px solid ' + prop.color
 			}
+
+			gridInner.appendChild(col)
 		}
 
+		grid.appendChild(gridInner)
+		this._frame.appendChild(grid)
 	}
 
+	// private
 
 	/**
 	 *
@@ -63,62 +223,135 @@
 	/**
 	 *
 	 * @param key {string}
-	 * @param prop {{enable: boolean, color: string, alpha: number, to: string}}
+	 * @param prop {{enable: boolean, color: string, alpha: number, position: string}}
+	 * @return {HTMLElement}
 	 * @private
 	 */
-	GridHelper.prototype._setBorders = function(key, prop) {
+	GridHelper.prototype._generateBorder = function(key, prop) {
 		if (!/^(top|right|bottom|left)$/.test(key)) {
 			return
 		}
 
-		if (!prop.enable) {
-			return
-		}
-
 		var border = document.createElement('div')
-
-		border.id = 'grid-helper-' + key
 		border.style.position = 'absolute'
 		border.style.display = 'block'
 		border.style.width = /^(top|bottom)$/.test(key) ? '100%' : '1px'
 		border.style.height = /^(top|bottom)$/.test(key) ? '1px' : '100%'
-		border.style[key] = prop.to
+		border.style[key] = this._formatPosition(prop.position)
 		border.style.opacity = prop.alpha
 		border.style.backgroundColor = prop.color
 		border.style.zIndex = '9999999'
+
+		if ('adjust' in prop) {
+			if ('top' === key) {
+				border.style.marginTop = this._formatPosition(prop.adjust)
+			}
+			if ('left' === key) {
+				border.style.marginLeft = this._formatPosition(prop.adjust)
+			}
+		}
 
 		this._frame.appendChild(border)
 	}
 
 	/**
 	 *
-	 * @param key {string}
-	 * @param prop {{enable: boolean, color: string, alpha: number, to: string}}
+	 * @param position {number|string}
+	 * @return {string}
 	 * @private
 	 */
-	GridHelper.prototype._setCenterBorders = function(key, prop) {
-		if (!/^(verticalCenter|horizontalCenter)$/.test(key)) {
-			return
+	GridHelper.prototype._formatPosition = function(position) {
+		if (this._checkType('number', position)) {
+			return position + 'px'
 		}
 
-		if (!prop.enable) {
-			return
+		if (this._checkUnit(position)) {
+			return position
 		}
 
-		var border = document.createElement('div')
-		var isVertical = /^verticalCenter$/.test(key)
+		return this._defaultProp.position
+	}
 
-		border.id = 'grid-helper-' + key
-		border.style.position = 'absolute'
-		border.style.display = 'block'
-		border.style.width = isVertical ? '100%' : '1px'
-		border.style.height = isVertical ? '1px' : '100%'
-		border.style[isVertical ? 'top' : 'left'] = '50%'
-		border.style.opacity = prop.alpha
-		border.style.backgroundColor = prop.color
-		border.style.zIndex = '9999999'
+	/**
+	 *
+	 * @param props {{color: string, alpha: number, position: number}}
+	 * @param isCenter {boolean}
+	 * @return {{color: string, alpha: number, position: number}}
+	 * @private
+	 */
+	GridHelper.prototype._checkProps = function(props, isCenter) {
+		if (undefined === props || null === props || 'object' !== (typeof props).toLowerCase()) {
+			return {
+				color: this._defaultProp.color,
+				alpha: this._defaultProp.alpha,
+				position: isCenter ? '50%' : this._defaultProp.position
+			}
+		}
 
-		this._frame.appendChild(border)
+		var keys = ['color', 'alpha', 'position']
+		var diffs = keys.filter(function(key) {
+			return Object.keys(props).indexOf(key) === -1
+		})
+
+		if (diffs.length !== 0) {
+			if (isCenter && this._numberReg.test(props.position) || this._unitReg.test(props.position)) {
+				props.adjust = props.position
+			}
+
+			diffs.map(function(diff) {
+				props[diff] = this._defaultProp[diff]
+			}.bind(this))
+
+			if (isCenter) {
+				props.position = '50%'
+			}
+		}
+		return props
+	}
+
+	/**
+	 *
+	 * @param props {{gutter: number, color: string, left: number, alpha: number, width: number, right: number, cols: number}}
+	 * @return {{gutter: number, color: string, left: number, alpha: number, width: number, right: number, cols: number}}
+	 * @private
+	 */
+	GridHelper.prototype._checkGridProps = function(props) {
+		if (undefined === props || null === props || 'object' !== (typeof props).toLowerCase()) {
+			return this._defaultGridProp
+		}
+
+		var keys = ['color', 'alpha', 'cols', 'gutter', 'width', 'right', 'left']
+		var diffs = keys.filter(function(key) {
+			return Object.keys(props).indexOf(key) === -1
+		})
+
+		if (diffs.length !== 0) {
+			diffs.map(function(diff) {
+				props[diff] = this._defaultGridProp[diff]
+			}.bind(this))
+		}
+		return props
+	}
+
+	/**
+	 *
+	 * @param value {number|string}
+	 * @return {boolean}
+	 * @private
+	 */
+	GridHelper.prototype._checkUnit = function(value) {
+		return this._checkType('string', value) && this._unitReg.test(value)
+	}
+
+	/**
+	 *
+	 * @param type {string}
+	 * @param value {*}
+	 * @return {boolean}
+	 * @private
+	 */
+	GridHelper.prototype._checkType = function(type, value) {
+		return type === (typeof value).toLowerCase()
 	}
 
 	window.GridHelper = GridHelper

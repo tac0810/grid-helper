@@ -13,6 +13,7 @@
 
     body, html {
       height: 100%;
+      background-color: darkgray;
     }
   </style>
 
@@ -20,50 +21,18 @@
 <body>
 <script src="./gridhelper.js"></script>
 <script>
-
-	new GridHelper({
-		top: {
-			enable: true,
-			color: '#F00',
-			alpha: 0.5,
-			to: '50px'
-		},
-		right: {
-			enable: true,
-			color: '#F00',
-			alpha: 0.5,
-			to: '50px'
-		},
-		bottom: {
-			enable: true,
-			color: '#F00',
-			alpha: 0.5,
-			to: '50px'
-		},
-		left: {
-			enable: true,
-			color: '#F00',
-			alpha: 0.5,
-			to: '50px'
-		},
-		aaa: {
-			enable: true,
-			color: '#F00',
-			alpha: 0.5,
-			to: '50px'
-		},
-		verticalCenter: {
-			enable: true,
-			color: '#00f',
-			alpha: 0.5
-		},
-		horizontalCenter: {
-			enable: true,
-			color: '#00f',
-			alpha: 0.5
-		},
-	})
-
+	var gridHelper = new GridHelper()
+	// gridHelper.top()
+	// gridHelper.right()
+	// gridHelper.bottom()
+	// gridHelper.left()
+	// gridHelper.verticalCenter()
+	// gridHelper.horizontalCenter()
+	gridHelper.center()
+	// gridHelper.verticalEnds()
+	// gridHelper.horizontalEnds()
+	gridHelper.frame()
+	gridHelper.verticalGrid()
 </script>
 </body>
 </html>
