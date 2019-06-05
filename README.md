@@ -1,11 +1,16 @@
 # How to grid
+if you want to hide the grids, press `cmd + /`. 
+
 ```javascript
 var gridHelper = new GridHelper()
 
+// default
 gridHelper.verticalEnds()
-// or
+
+// or set pixel
 gridHelper.verticalEnds(30)
-// or
+
+// or set properties
 gridHelper.verticalEnds({
   color: '#F00',
   alpha: 0.5,
@@ -13,6 +18,59 @@ gridHelper.verticalEnds({
 })
 ```
 
+## BreakPoints Sample
+```javascript
+var gridHelper = new GridHelper();
+
+var setGrid = function(){
+  
+  // remove 
+  gridHelper.remove()
+  
+  if(1440 <= window.innerWidth){
+    // re-set
+    gridHelper.verticalGrid({
+      cols: 14,
+      left: 0,
+      right: 0,
+      gutter: 0,
+      alpha: 0.7,
+      maxWidth: 1680,
+      color: '#00ffff' 
+    })  
+  }
+  
+  if(768 < window.innerWidth && window.innerWidth < 1440){
+    // re-set
+    gridHelper.verticalGrid({
+      cols: 6,
+      left: '12%',
+      right: '12%',
+      gutter: 0,
+      alpha: 0.7,
+      color: '#00ffff'
+    })
+  }
+  
+  if(768 <= window.innerWidth){
+    // re-set
+    gridHelper.verticalGrid({
+      cols: 6,
+      left: 16,
+      right: 16,
+      gutter: 0,
+      alpha: 0.7,
+      color: '#00ffff'
+    })  
+  }
+}
+
+// setup
+setGrid()
+
+// bind resize event
+window.addEventListener('resize', setGrid, false)
+```
 ## Border Property
 ```javascript
 var borderProperty = {

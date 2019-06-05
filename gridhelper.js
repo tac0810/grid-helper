@@ -6,7 +6,6 @@
 	 * @constructor
 	 */
 	function GridHelper() {
-
 		/**
 		 *
 		 * @type {{color: string, alpha: number, position: number}}
@@ -53,10 +52,27 @@
 		 * @private
 		 */
 		this._frame = document.createElement('div')
+
+		/**
+		 *
+		 * @type {boolean}
+		 * @private
+		 */
+		this._visible = true
+
 		this._setUpFrame()
 	}
 
 	// public
+
+	/**
+	 * @public
+	 */
+	GridHelper.prototype.remove = function() {
+		if (this._frame.childNodes.length > 0) {
+			this._frame.removeChild(this._frame.childNodes[0])
+		}
+	}
 
 	/**
 	 *
@@ -181,6 +197,12 @@
 			gridInner.style.paddingRight = this._formatPosition(prop.right)
 		}
 
+		if ('maxWidth' in prop) {
+			gridInner.style.maxWidth = this._formatPosition(prop.maxWidth)
+			gridInner.style.marginRight = 'auto'
+			gridInner.style.marginLeft = 'auto'
+		}
+
 		for (var i = 0; i < prop.cols; i++) {
 			var col = document.createElement('div')
 			var _gutter = this._formatPosition(prop.gutter)
@@ -214,10 +236,23 @@
 		this._frame.style.display = 'block'
 		this._frame.style.width = '100%'
 		this._frame.style.height = '100%'
+		this._frame.style.top = 0
+		this._frame.style.left = 0
 		this._frame.style.zIndex = '9999999'
 		this._frame.style.pointerEvents = 'none'
 
 		document.body.appendChild(this._frame)
+
+
+		console.info('Press cmd + /')
+		window.addEventListener('keydown',e => {
+			if (((e.ctrlKey && !e.metaKey) || (!e.ctrlKey && e.metaKey)) && e.keyCode === 191) {
+				this._visible = !this._visible
+				this._frame.style.visibility = this._visible ? 'visible' : 'hidden'
+			}
+		})
+
+
 	}
 
 	/**
@@ -298,9 +333,9 @@
 				props.adjust = props.position
 			}
 
-			diffs.map(function(diff) {
+			diffs.map(diff => {
 				props[diff] = this._defaultProp[diff]
-			}.bind(this))
+			})
 
 			if (isCenter) {
 				props.position = '50%'
@@ -320,15 +355,15 @@
 			return this._defaultGridProp
 		}
 
-		var keys = ['color', 'alpha', 'cols', 'gutter', 'width', 'right', 'left']
+		var keys = ['color', 'alpha', 'cols', 'gutter', 'right', 'left']
 		var diffs = keys.filter(function(key) {
 			return Object.keys(props).indexOf(key) === -1
 		})
 
 		if (diffs.length !== 0) {
-			diffs.map(function(diff) {
+			diffs.map(diff => {
 				props[diff] = this._defaultGridProp[diff]
-			}.bind(this))
+			})
 		}
 		return props
 	}
